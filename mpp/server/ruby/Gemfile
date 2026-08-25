@@ -1,0 +1,22 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+# MPP_RB_PATH lets contributors exercise an unmerged local mpp-rb checkout.
+# Published installs use the canonical repository and never depend on a local path.
+if ENV["MPP_RB_PATH"]&.strip&.length&.positive?
+  gem "mpp-rb", path: ENV.fetch("MPP_RB_PATH")
+else
+  gem "mpp-rb", github: "stripe/mpp-rb"
+end
+
+gem "dotenv", "~> 3.2"
+gem "puma", "~> 7.0"
+gem "rackup", "~> 2.2"
+gem "sinatra", "~> 4.2"
+gem "stripe", "~> 18.0"
+
+group :development, :test do
+  gem "minitest", "~> 5.25"
+  gem "standard", "~> 1.44"
+end
