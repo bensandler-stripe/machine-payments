@@ -4,7 +4,7 @@ version = "1.0.0"
 description = "MPP REST API sample with FastAPI and Stripe Payment Tokens"
 requires-python = ">=3.12"
 dependencies = [
-    "pympp[tempo]>=0.10.0",
+    "pympp[stripe]>=0.11.1",
     "fastapi>=0.115.0",
     "python-dotenv>=1.0.0",
     "stripe>=11.0.0",

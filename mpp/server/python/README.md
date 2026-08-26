@@ -1,6 +1,8 @@
 # MPP REST API - Python
 
-This is the Python implementation of the MPP REST API sample using FastAPI.
+This is the Python implementation of the MPP REST API sample using FastAPI. It
+accepts Tempo and Stripe shared payment token (SPT) payments; the MPP Stripe
+facade records successful Tempo payments as Stripe crypto PaymentIntents.
 
 ## Requirements
 
@@ -22,6 +24,7 @@ stripe post /v1/crypto/deposit_addresses --live --stripe-version 2026-05-27.prev
 cp ../../../.env.template .env
 # Edit .env with your credentials:
 # - STRIPE_SECRET_KEY
+# - STRIPE_PROFILE_ID (from your Stripe profile)
 # - TEMPO_DEPOSIT_ADDRESS (from step 1)
 ```
 
@@ -42,6 +45,12 @@ make run
 npx mppx@latest validate http://localhost:4242
 ```
 
+The OpenAPI 3.1 discovery document is available at:
+
+```bash
+curl http://localhost:4242/openapi.json
+```
+
 ## Development commands
 
 - `make lint` — run lint and formatting checks without changing files
@@ -54,8 +63,12 @@ npx mppx@latest validate http://localhost:4242
 
 ### With Link (card payments)
 
+Stripe requires a minimum charge of 0.50 USD (or equivalent) for card payments
+via SPT.
+
 ```bash
 npx @stripe/link-cli mpp pay http://localhost:4242/paid \
+  -X POST \
   --context "Testing the MPP machine payments integration sample server running locally on localhost:4242, verifying end-to-end payment flow with Stripe shared payment tokens"
 ```
 
@@ -65,5 +78,5 @@ npx @stripe/link-cli mpp pay http://localhost:4242/paid \
 curl -fsSL https://tempo.xyz/install | bash
 tempo wallet login
 tempo wallet fund
-tempo request http://localhost:4242/paid
+tempo request -X POST http://localhost:4242/paid
 ```
